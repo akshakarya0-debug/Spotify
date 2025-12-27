@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spotify - Music for everyone</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Circular:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/main.css">
+</head>
+<body>
+
+    <!-- Top Navigation -->
+    <!-- Top Navigation -->
+<nav class="top-nav">
+    <div class="nav-left">
+        <div class="logo">
+            <i class="fa-brands fa-spotify"></i>
+        </div>
+        <div class="nav-buttons">
+            <button class="nav-btn" onclick="goBack()">
+                <i class="fa-solid fa-chevron-left"></i>
+            </button>
+            <button class="nav-btn" onclick="goForward()">
+                <i class="fa-solid fa-chevron-right"></i>
+            </button>
+        </div>
+        <div class="search-bar">
+            <span style="margin-right: 8px; color: #666;">
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </span>
+            <input type="text" placeholder="Apa yang ingin kamu putar?">
+        </div>
+    </div>
+    <div class="nav-right">
+        <a href="#" class="nav-link">Premium</a>
+        <a href="#" class="nav-link">Dukungan</a>
+        <a href="#" class="nav-link">Download</a>
+        <span style="border-left: 1px solid rgba(255,255,255,0.2); height: 24px;"></span>
+        <a href="#" class="nav-link">
+            <i class="fa-solid fa-mobile-screen"></i>
+            Pasang Aplikasi
+        </a>
+        <button class="nav-chip" id="roleChip" onclick="App.toggleRole()" title="Klik untuk ganti role">
+        🎤 Mode: Artist
+      </button>
+
+      <button class="btn-login" id="studioBtn" onclick="App.openArtistStudio()">
+        Artist Studio
+      </button>
+    </div>
+</nav>
+
+<!-- Main Container -->
+<div class="main-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-section">
+            <h3>Koleksi Kamu</h3>
+            <button class="create-playlist-btn">
+                <span style="font-size: 24px;">
+                    <i class="fa-solid fa-plus"></i>
+                </span>
+                <span>Buat playlist</span>
+            </button>
+            <div style="margin-top: 16px; color: var(--spotify-light-gray); font-size: 14px;">
+                Caranya mudah, kami akan membantumu
+            </div>
+        </div>
+
+        <div class="sidebar-section" style="margin-top: auto;">
+            <h3>Ayo cari beberapa podcast untuk diikuti</h3>
+            <div style="color: var(--spotify-light-gray); font-size: 14px; margin-bottom: 16px;">
+                Kami akan terus mengabarimu tentang episode baru
+            </div>
+            <button class="create-playlist-btn">
+                Jelajahi podcast
+            </button>
+        </div>
+
+        <div style="margin-top: 24px;">
+            <button class="create-playlist-btn" style="width: auto;">
+                <i class="fa-solid fa-globe"></i>
+                Bahasa Indonesia
+            </button>
+        </div>
+    </aside>
+
+    <!-- Main Content - Dashboard -->
+    <main class="main-content" id="dashboard">
+        <div class="dashboard">
+            <section>
+                <div class="section-header">
+                    <h2>Lagu trending</h2>
+                    <a href="#" class="show-all">Tampilkan semua</a>
+                </div>
+
+                <div class="card-grid">
+                    <div class="card" onclick="showArtistPage('Nadhif Basalamah')">
+                        <div class="card-image">
+                            <i class="fa-solid fa-guitar"></i>
+                            <div class="play-button">
+                                <i class="fa-solid fa-play"></i>
+                            </div>
+                        </div>
+                        <div class="card-title">kota ini tak sama tanpamu</div>
+                        <div class="card-subtitle">Nadhif Basalamah</div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-image">
+                            <i class="fa-solid fa-compact-disc"></i>
+                            <div class="play-button">
+                                <i class="fa-solid fa-play"></i>
+                            </div>
+                        </div>
+                        <div class="card-title">DJ SO ASU X DORA DORA</div>
+                        <div class="card-subtitle">Kharis Rmx</div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-image">
+                            <i class="fa-solid fa-music"></i>
+                            <div class="play-button">
+                                <i class="fa-solid fa-play"></i>
+                            </div>
+                        </div>
+                        <div class="card-title">EEEE A</div>
+                        <div class="card-subtitle">dia</div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-image">
+                            <i class="fa-solid fa-keyboard"></i>
+                            <div class="play-button">
+                                <i class="fa-solid fa-play"></i>
+                            </div>
+                        </div>
+                        <div class="card-title">Die On This Hill</div>
+                        <div class="card-subtitle">SIENNA SPIRO</div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-image">
+                            <i class="fa-solid fa-microphone"></i>
+                            <div class="play-button">
+                                <i class="fa-solid fa-play"></i>
+                            </div>
+                        </div>
+                        <div class="card-title">Tunggal Eka</div>
+                        <div class="card-subtitle">Denny Caknan</div>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <div class="section-header">
+                    <h2>Artis populer</h2>
+                    <a href="#" class="show-all">Tampilkan semua</a>
+                </div>
+
+                <div class="card-grid">
+                    <div class="card" onclick="showArtistPage('Fourtwnty')">
+                        <div class="card-image rounded">
+                            <i class="fa-solid fa-user-group"></i>
+                        </div>
+                        <div class="card-title">Fourtwnty</div>
+                        <div class="card-subtitle">Artis</div>
+                    </div>
+                </div>
+            </section>
+            <section class="studio-page" id="studioView">
+
+  <!-- ARTIST CONTEXT HEADER -->
+  <header class="artist-studio-header">
+    <div class="artist-identity">
+      <div class="artist-badge">Verified Artist</div>
+      <h1 class="artist-name">Fourtwnty</h1>
+      <p class="artist-meta">
+        Kanal resmi pengumuman untuk followers di Spotify.
+        Komunikasi bersifat satu arah dan terverifikasi.
+      </p>
+    </div>
+
+    <div class="artist-primary-action">
+      <button class="btn-primary" onclick="ArtistStudio.openComposer()">
+        + Buat Pengumuman
+      </button>
+    </div>
+  </header>
+
+  <!-- SECONDARY ACTIONS -->
+  <section class="artist-tools">
+    <button class="btn-secondary" onclick="ArtistStudio.seedDemo()">Isi Contoh</button>
+    <button class="btn-secondary" onclick="ArtistStudio.exportJson()">Export JSON</button>
+
+    <label class="btn-secondary file-btn">
+      Import JSON
+      <input
+        type="file"
+        accept="application/json"
+        onchange="ArtistStudio.importJson(event)"
+      />
+    </label>
+  </section>
+
+  <!-- ANNOUNCEMENT MANAGEMENT -->
+  <section class="announcement-dashboard">
+
+    <!-- STATUS TABS -->
+    <nav class="announcement-tabs">
+      <button class="tab active" data-status="all" onclick="ArtistStudio.setStatus('all')">
+        Semua
+      </button>
+      <button class="tab" data-status="published" onclick="ArtistStudio.setStatus('published')">
+        Published
+      </button>
+      <button class="tab" data-status="draft" onclick="ArtistStudio.setStatus('draft')">
+        Draft
+      </button>
+      <button class="tab" data-status="scheduled" onclick="ArtistStudio.setStatus('scheduled')">
+        Terjadwal
+      </button>
+    </nav>
+
+    <!-- SEARCH -->
+    <div class="announcement-search">
+      <input
+        id="studioSearchInput"
+        placeholder="Cari pengumuman..."
+        oninput="ArtistStudio.renderList()"
+      />
+    </div>
+
+    <!-- STATS -->
+    <div class="announcement-stats">
+      <div class="stat">
+        <span class="stat-label">Total</span>
+        <span class="stat-value" id="statTotal">0</span>
+      </div>
+      <div class="stat">
+        <span class="stat-label">Published</span>
+        <span class="stat-value" id="statPublished">0</span>
+      </div>
+      <div class="stat">
+        <span class="stat-label">Draft</span>
+        <span class="stat-value" id="statDraft">0</span>
+      </div>
+    </div>
+
+    <!-- LIST -->
+    <div class="announcement-list" id="studioList">
+      <!-- announcement cards rendered by JS -->
+    </div>
+
+  </section>
+
+  <!-- HIDDEN CONTEXT (SYSTEM) -->
+  <input type="hidden" id="studioArtistSelect" value="Fourtwnty" />
+
+</section>
+        </div>
+    </main>
+
+    <!-- Artist Page -->
+    <main class="main-content artist-page" id="artistPage">
+        <div class="artist-header">
+            <div class="verified-badge">
+                <div class="verified-icon">
+                    <i class="fa-solid fa-check"></i>
+                </div>
+                <span>Artis Terverifikasi</span>
+            </div>
+            <h1 class="artist-name" id="artistName">Fourtwnty</h1>
+            <div class="artist-stats">
+                <span id="artistListeners">10.517.222 pendengar bulanan</span>
+            </div>
+        </div>
+
+        <div class="artist-content">
+            <div class="artist-controls">
+                <button class="btn-play-artist">
+                    <i class="fa-solid fa-play"></i>
+                </button>
+                <button class="btn-follow" id="followBtn">
+                    <span>Ikuti</span>
+                </button>
+
+                <button class="btn-announcement" onclick="openAnnouncementModal()">
+                    <i class="fa-solid fa-bullhorn"></i>
+                    Pengumuman
+                    <span class="notification-badge"></span>
+                </button>
+                <button class="btn-more" onclick="showContextMenu(event)">
+                    <i class="fa-solid fa-ellipsis"></i>
+                </button>
+            </div>
+             <!-- Song List -->
+        <div class="song-list-section">
+            <h3 class="section-title">Populer</h3>
+
+            <div class="song-list">
+                <div class="song-item">
+                    <div class="song-index">1</div>
+                    <div class="song-info">
+                        <div class="song-cover">
+                            <i class="fa-solid fa-music"></i>
+                        </div>
+                        <div class="song-meta">
+                            <span class="song-title">Mangu</span>
+                            <span class="song-artist">Fourtwnty</span>
+                        </div>
+                    </div>
+                    <div class="song-duration">4:21</div>
+                </div>
+
+                <div class="song-item">
+                    <div class="song-index">2</div>
+                    <div class="song-info">
+                        <div class="song-cover">
+                            <i class="fa-solid fa-music"></i>
+                        </div>
+                        <div class="song-meta">
+                            <span class="song-title">Zona Nyaman</span>
+                            <span class="song-artist">Fourtwnty</span>
+                        </div>
+                    </div>
+                    <div class="song-duration">3:45</div>
+                </div>
+
+                <div class="song-item">
+                    <div class="song-index">3</div>
+                    <div class="song-info">
+                        <div class="song-cover">
+                            <i class="fa-solid fa-music"></i>
+                        </div>
+                        <div class="song-meta">
+                            <span class="song-title">Aku Tenang</span>
+                            <span class="song-artist">Fourtwnty</span>
+                        </div>
+                    </div>
+                    <div class="song-duration">4:02</div>
+                </div>
+
+                <div class="song-item">
+                    <div class="song-index">4</div>
+                    <div class="song-info">
+                        <div class="song-cover">
+                            <i class="fa-solid fa-music"></i>
+                        </div>
+                        <div class="song-meta">
+                            <span class="song-title">Fana Merah Jambu</span>
+                            <span class="song-artist">Fourtwnty</span>
+                        </div>
+                    </div>
+                    <div class="song-duration">4:56</div>
+                </div>
+            </div>
+        </div>
+        </div>
+               
+
+    </main>
+</div>
+
+<!-- Context Menu -->
+<div class="context-menu" id="contextMenu">
+    <div class="context-menu-item">
+        <i class="fa-solid fa-user"></i> Ikuti
+    </div>
+    <div class="context-menu-item disabled">
+        <i class="fa-solid fa-ban"></i> Jangan putar artis ini
+    </div>
+    <div class="context-menu-item">
+        <i class="fa-solid fa-radio"></i> Ke radio artis
+    </div>
+    <div class="context-menu-item">
+        <i class="fa-solid fa-flag"></i> Laporkan
+    </div>
+    <div class="context-menu-item">
+        <i class="fa-solid fa-share"></i> Bagikan
+    </div>
+    <div class="context-menu-item">
+        <i class="fa-solid fa-desktop"></i> Buka di aplikasi Desktop
+    </div>
+</div>
+
+<!-- Announcement Modal -->
+<div class="modal-overlay" id="announcementModal">
+    <div class="modal">
+        <!-- Header -->
+        <div class="modal-header">
+            <h2>
+                <i class="fa-solid fa-bullhorn"></i>
+                Pengumuman Artis
+            </h2>
+            <button class="modal-close" onclick="closeAnnouncementModal()">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+
+        <!-- Content -->
+        <div class="modal-content">
+
+            <!-- TAB NAVIGASI (WAJIB UNTUK STATE READ / UNREAD) -->
+            <div class="announcement-tabs">
+                <button class="tab active" onclick="showUnread()">Belum dibaca</button>
+                <button class="tab" onclick="showRead()">Sudah dibaca</button>
+            </div>
+
+            <!-- CONTAINER DINAMIS -->
+            <div id="announcementContainer">
+                <!-- announcement-card DI-RENDER oleh JavaScript -->
+            </div>
+
+        </div>
+
+        <!-- Footer -->
+        <div style="
+                margin-top:24px;
+                padding:16px;
+                background:rgba(0,0,0,0.2);
+                border-radius:8px;
+                font-size:12px;
+                color:var(--spotify-light-gray);
+            ">
+                <span class="info-icon">
+                    <i class="fa-solid fa-circle-info"></i>
+                </span>
+                    <strong>Komunikasi Satu Arah:</strong>
+                    Pengumuman ini hanya dapat dibuat oleh artis terverifikasi.
+                    Tidak tersedia komentar atau balasan.
+            </div>
+    </div>
+</div>
+
+
+
+
+    <!-- Script dipisah -->
+    <script src="assets/js/app.js"></script>
+    <script src="assets/js/studio.js"></script>
+    <script src="assets/js/announcement.js"></script>
+    <script src="assets/js/storage.js"></script>
+     <script src="assets/js/announcement-data.js"></script>
+    <script src="assets/js/navigation.js"></script>
+    <script src="assets/js/modal.js"></script>
+    <script src="assets/js/context-menu.js"></script>
+
+</body>
+</html>
