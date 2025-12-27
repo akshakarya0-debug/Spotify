@@ -18,7 +18,7 @@ function showArtistPage(artistName) {
 
     if (artistName === 'Fourtwnty') {
         document.getElementById('artistListeners').textContent =
-            '10.517.222 pendengar bulanan';
+            '10.517.222 pendenar bulanan';
     } else if (artistName === 'Nadhif Basalamah') {
         document.getElementById('artistListeners').textContent =
             '8.342.891 pendengar bulanan';
