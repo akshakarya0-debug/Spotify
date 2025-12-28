@@ -1,69 +1,59 @@
 /**
  * ANNOUNCEMENT VIEWER MODAL - Artist Page
- * Modal ini menampilkan pengumuman yang dibuat setiap artist
- * Setiap artist punya data announcement terpisah (tidak dicampur)
- * Setiap artist juga punya read status tracking terpisah
- * 
- * ALUR:
- * Artis buat pengumuman di Artist Studio → Disimpan untuk artist itu
- * User buka Artist Page (Fourtwnty/Nadhif/etc) → Klik tombol "Pengumuman"
- * → Tampilkan announcement untuk artist yang sedang dibuka
- * → Read/unread tracking terpisah per-artist
- * → Badge update berdasarkan artist yang sedang dibuka
+ * - Announcement per artist
+ * - Read/unread tracking per artist
+ * - Notification badge auto update (FIXED)
  */
 
-// Track read announcement per-artist
-// Structure: { 'Fourtwnty': Set[id1, id2], 'Nadhif Basalamah': Set[id3, id4] }
-// try to load persisted read state from localStorage (survive reloads)
-let readAnnouncementsByArtist = (function(){
+/* =========================
+   READ STATE (PER ARTIST)
+========================= */
+let readAnnouncementsByArtist = (function () {
   try {
-    const raw = localStorage.getItem('readAnnouncementsByArtist_v1');
+    const raw = localStorage.getItem("readAnnouncementsByArtist_v1");
     if (raw) {
       const parsed = JSON.parse(raw);
-      // convert arrays to Sets
-      Object.keys(parsed).forEach(k => parsed[k] = new Set(parsed[k]));
+      Object.keys(parsed).forEach(
+        k => (parsed[k] = new Set(parsed[k]))
+      );
       return parsed;
     }
-  } catch(e){ console.warn('Failed to load readAnnouncementsByArtist', e); }
+  } catch (e) {
+    console.warn("Failed to load read state", e);
+  }
   return {};
 })();
 
 let currentFilter = "unread";
 
-/**
- * Buka modal viewer untuk membaca announcement
- * Modal menampilkan announcement untuk artist yang sedang dibuka
- */
+/* =========================
+   MODAL OPEN / CLOSE
+========================= */
 function openAnnouncementViewerModal() {
   const modal = document.getElementById("announcementViewerModal");
   if (!modal) return;
-  
+
   modal.classList.remove("hidden");
   document.body.style.overflow = "hidden";
 
-  // Reset tab ke "Belum dibaca"
   currentFilter = "unread";
   setActiveTab(0);
 
-  // Render pengumuman
   renderAnnouncements();
+  updateAnnouncementBadgeForCurrentArtist();
 }
 
-/**
- * Tutup modal viewer
- */
 function closeAnnouncementViewerModal() {
   const modal = document.getElementById("announcementViewerModal");
   if (!modal) return;
-  
+
   modal.classList.add("hidden");
   document.body.style.overflow = "auto";
 }
 
-/**
- * Get read announcements Set untuk artist tertentu
- * Jika belum ada, buat Set baru
- */
+/* =========================
+   READ STATE HELPERS
+========================= */
 function getReadAnnouncementsForArtist(artistName) {
   if (!readAnnouncementsByArtist[artistName]) {
     readAnnouncementsByArtist[artistName] = new Set();
@@ -71,91 +61,74 @@ function getReadAnnouncementsForArtist(artistName) {
   return readAnnouncementsByArtist[artistName];
 }
 
-/**
- * Tandai pengumuman sebagai sudah dibaca
- * Tracking per-artist
- */
-function markAsRead(id) {
-  // Get artist name dari DOM
-  const artistNameEl = document.getElementById("artistName");
-  if (!artistNameEl) return;
-  
-  const artistName = artistNameEl.textContent;
-
-  // Convert id ke number (mendukung number atau numeric-string)
-  const idNumber = Number(id);
-
-  // Tambah ke read set untuk artist ini
-  const readSet = getReadAnnouncementsForArtist(artistName);
-  readSet.add(idNumber);
-
-  // persist to localStorage (arrays only)
+function persistReadState() {
   try {
     const plain = {};
-    Object.keys(readAnnouncementsByArtist).forEach(k => {
-      plain[k] = Array.from(readAnnouncementsByArtist[k]);
-    });
-    localStorage.setItem('readAnnouncementsByArtist_v1', JSON.stringify(plain));
+    Object.keys(readAnnouncementsByArtist).forEach(
+      k => (plain[k] = Array.from(readAnnouncementsByArtist[k]))
+    );
+    localStorage.setItem(
+      "readAnnouncementsByArtist_v1",
+      JSON.stringify(plain)
+    );
   } catch (e) {
-    console.warn('Failed to persist readAnnouncementsByArtist', e);
+    console.warn("Persist read state failed", e);
   }
-  console.log(`✓ Mark as read: ${artistName} - ID ${idNumber}`, readSet);
+}
 
-  // Update notification badge (langsung ke ArtistStudio)
-  if (window.ArtistStudio && window.ArtistStudio.updateNotificationBadge) {
-    ArtistStudio.updateNotificationBadge();
-  }
+/* =========================
+   MARK AS READ (FIXED)
+========================= */
+function markAsRead(id) {
+  const artistNameEl = document.getElementById("artistName");
+  if (!artistNameEl) return;
 
-  // Re-render modal
+  const artistName = artistNameEl.textContent.trim();
+  const idNumber = Number(id);
+
+  const readSet = getReadAnnouncementsForArtist(artistName);
+  if (readSet.has(idNumber)) return;
+
+  readSet.add(idNumber);
+  persistReadState();
+
+  updateAnnouncementBadgeForCurrentArtist();
   renderAnnouncements();
 }
 
-/**
- * Tampilkan tab "Belum Dibaca"
- */
+/* =========================
+   TAB HANDLERS
+========================= */
 function showUnread() {
   currentFilter = "unread";
   setActiveTab(0);
   renderAnnouncements();
 }
 
-/**
- * Tampilkan tab "Sudah Dibaca"
- */
 function showRead() {
   currentFilter = "read";
   setActiveTab(1);
   renderAnnouncements();
 }
 
-/**
- * Set tab mana yang active
- */
 function setActiveTab(index) {
-  document.querySelectorAll(".announcement-tabs .tab")
+  document
+    .querySelectorAll(".announcement-tabs .tab")
     .forEach((t, i) => t.classList.toggle("active", i === index));
 }
 
-/**
- * Render announcement dalam modal
- * Menampilkan announcement untuk artist yang sedang dibuka (currentArtist)
- * Filter berdasarkan read/unread status
- * 
- * PENTING: Data per-artist terpisah, tidak dicampur
- */
+/* =========================
+   RENDER ANNOUNCEMENTS
+========================= */
 function renderAnnouncements() {
   const container = document.getElementById("announcementContainer");
-  
-  // Get artistName dari DOM (dari halaman artist yang sedang dibuka)
   const artistNameEl = document.getElementById("artistName");
-  if (!artistNameEl) return;
-  
-  const artistName = artistNameEl.textContent;
 
-  // Get announcement untuk artist yang sedang dibuka (terpisah per-artist)
-  const published = ArtistStudio.getPublishedAnnouncements(artistName);
+  if (!container || !artistNameEl) return;
 
-  if (!container) return;
+  const artistName = artistNameEl.textContent.trim();
+  const published =
+    ArtistStudio.getPublishedAnnouncements(artistName) || [];
 
   if (published.length === 0) {
     container.innerHTML = `
@@ -166,10 +139,8 @@ function renderAnnouncements() {
     return;
   }
 
-  // Get read set untuk artist ini
   const readSet = getReadAnnouncementsForArtist(artistName);
 
-  // Filter berdasarkan status read/unread
   const filtered = published.filter(a =>
     currentFilter === "unread"
       ? !readSet.has(a.id)
@@ -179,21 +150,28 @@ function renderAnnouncements() {
   if (filtered.length === 0) {
     container.innerHTML = `
       <div style="color:var(--spotify-light-gray);font-size:14px;">
-        ${currentFilter === "unread" ? "Tidak ada pengumuman belum dibaca" : "Tidak ada pengumuman yang sudah dibaca"}
+        ${
+          currentFilter === "unread"
+            ? "Tidak ada pengumuman belum dibaca"
+            : "Tidak ada pengumuman yang sudah dibaca"
+        }
       </div>
     `;
     return;
   }
 
-  // Render announcement
-  container.innerHTML = filtered.map(a => `
-    <div class="announcement-card ${readSet.has(a.id) ? "read" : ""}"
-         onclick="markAsRead(${a.id})">
+  container.innerHTML = filtered
+    .map(
+      a => `
+    <div class="announcement-card ${
+      readSet.has(a.id) ? "read" : ""
+    }" onclick="markAsRead(${a.id})">
 
       <div class="announcement-header-card">
         <div class="announcement-meta">
           <span>
-            <i class="fa-solid fa-calendar-days"></i> ${new Date(a.createdAt).toLocaleDateString("id-ID")}
+            <i class="fa-solid fa-calendar-days"></i>
+            ${new Date(a.createdAt).toLocaleDateString("id-ID")}
           </span>
         </div>
       </div>
@@ -201,29 +179,51 @@ function renderAnnouncements() {
       <h4 class="announcement-title">${a.content}</h4>
 
       <div class="announcement-footer">
-        <span><i class="fa-regular fa-eye"></i> ${(a.views||0).toLocaleString()} views</span>
+        <span>
+          <i class="fa-regular fa-eye"></i>
+          ${(a.views || 0).toLocaleString()} views
+        </span>
       </div>
     </div>
-  `).join("");
+  `
+    )
+    .join("");
 }
 
-/**
- * PUBLIC FUNCTION - Hitung berapa announcement yang belum dibaca untuk artist
- * Digunakan oleh artistStudio.js untuk update badge
- * 
- * @param {string} artistName - Nama artist
- * @param {Array} publishedAnnouncements - Array announcement yang published
- * @return {number} - Jumlah announcement yang belum dibaca
- */
-function getUnreadCountForArtist(artistName, publishedAnnouncements = []) {
-  if (!publishedAnnouncements || publishedAnnouncements.length === 0) {
-    return 0;
+/* =========================
+   BADGE HANDLER (FINAL FIX)
+========================= */
+function updateAnnouncementBadgeForCurrentArtist() {
+  const badge = document.querySelector(".notification-badge");
+  const artistNameEl = document.getElementById("artistName");
+
+  if (!badge || !artistNameEl) return;
+
+  const artistName = artistNameEl.textContent.trim();
+  const published =
+    ArtistStudio.getPublishedAnnouncements(artistName) || [];
+
+  const unreadCount = getUnreadCountForArtist(
+    artistName,
+    published
+  );
+
+  if (unreadCount > 0) {
+    badge.style.display = "inline-flex";
+    badge.textContent = unreadCount;
+  } else {
+    badge.style.display = "none";
   }
+}
 
-  // Get read set untuk artist ini
-  const readSet = readAnnouncementsByArtist[artistName] || new Set();
+/* =========================
+   PUBLIC HELPER (FOR STUDIO)
+========================= */
+function getUnreadCountForArtist(artistName, published = []) {
+  if (!published || published.length === 0) return 0;
 
-  // Hitung yang BELUM dibaca
-  const unreadCount = publishedAnnouncements.filter(a => !readSet.has(a.id)).length;
-  return unreadCount;
+  const readSet =
+    readAnnouncementsByArtist[artistName] || new Set();
+
+  return published.filter(a => !readSet.has(a.id)).length;
 }

@@ -1,35 +1,61 @@
 /**
  * NAVIGATION LAYER
- * Mengatur navigasi halaman dengan memanggil fungsi dari App.js
- * Ini adalah wrapper untuk memudahkan pemanggilan dari HTML
+ * Wrapper antara HTML dan App.js
+ * + Follow button dengan state per artis (FIXED)
  */
 
-// Kembali ke halaman sebelumnya (dashboard atau artist ke dashboard)
+/* =========================
+   FOLLOW STATE (PER ARTIS)
+   key = nama artis (diambil dari DOM)
+========================= */
+const followState = {};
+
+/* =========================
+   NAVIGATION WRAPPER
+========================= */
+
+// Tombol back (pakai logic App)
 function goBack() {
   App.goBack();
 }
 
-// Maju ke halaman berikutnya (tidak digunakan saat ini)
+// Forward tidak dipakai
 function goForward() {
-  App.goForward();
+  // intentionally empty
 }
 
-// Tampilkan halaman artis dengan nama tertentu
+// Navigasi ke halaman artis
 function showArtistPage(artistName) {
   App.showArtistPage(artistName);
-  setupFollowButton(); // Setup tombol follow setelah halaman ditampilkan
+
+  // SETUP FOLLOW setelah halaman artis aktif
+  setupFollowButton();
 }
 
-/**
- * FOLLOW BUTTON HANDLER
- * Mengatur interaksi tombol "Ikuti" di halaman artis
- */
+/* =========================
+   FOLLOW BUTTON HANDLER
+   SUMBER KEBENARAN: DOM (#artistName)
+========================= */
 function setupFollowButton() {
   const followBtn = document.getElementById("followBtn");
-  if (!followBtn) return;
+  const artistNameEl = document.getElementById("artistName");
 
-  let isFollowing = false;
+  if (!followBtn || !artistNameEl) return;
+
+  const artistName = artistNameEl.textContent.trim();
   const label = followBtn.querySelector("span");
+
+  if (!label) return;
+
+  // Ambil state follow berdasarkan artis AKTIF
+  let isFollowing = !!followState[artistName];
+
+  // Render state awal
+  followBtn.classList.toggle("following", isFollowing);
+  label.textContent = isFollowing ? "Mengikuti" : "Ikuti";
+
+  // Reset handler agar tidak dobel
+  followBtn.onclick = null;
 
   followBtn.onclick = () => {
     followBtn.classList.add("animating");
@@ -37,6 +63,10 @@ function setupFollowButton() {
     setTimeout(() => {
       isFollowing = !isFollowing;
 
+      // Simpan state ke artis yang benar
+      followState[artistName] = isFollowing;
+
+      // Update UI
       followBtn.classList.toggle("following", isFollowing);
       label.textContent = isFollowing ? "Mengikuti" : "Ikuti";
 
@@ -44,4 +74,3 @@ function setupFollowButton() {
     }, 150);
   };
 }
-
