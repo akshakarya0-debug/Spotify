@@ -170,96 +170,6 @@
                     </div>
                 </div>
             </section>
-            <section class="studio-page" id="studioView">
-
-  <!-- ARTIST CONTEXT HEADER -->
-  <header class="artist-studio-header">
-    <div class="artist-identity">
-      <div class="artist-badge">Verified Artist</div>
-      <h1 class="artist-name">Fourtwnty</h1>
-      <p class="artist-meta">
-        Kanal resmi pengumuman untuk followers di Spotify.
-        Komunikasi bersifat satu arah dan terverifikasi.
-      </p>
-    </div>
-
-    <div class="artist-primary-action">
-      <button class="btn-primary" onclick="ArtistStudio.openComposer()">
-        + Buat Pengumuman
-      </button>
-    </div>
-  </header>
-
-  <!-- SECONDARY ACTIONS -->
-  <section class="artist-tools">
-    <button class="btn-secondary" onclick="ArtistStudio.seedDemo()">Isi Contoh</button>
-    <button class="btn-secondary" onclick="ArtistStudio.exportJson()">Export JSON</button>
-
-    <label class="btn-secondary file-btn">
-      Import JSON
-      <input
-        type="file"
-        accept="application/json"
-        onchange="ArtistStudio.importJson(event)"
-      />
-    </label>
-  </section>
-
-  <!-- ANNOUNCEMENT MANAGEMENT -->
-  <section class="announcement-dashboard">
-
-    <!-- STATUS TABS -->
-    <nav class="announcement-tabs">
-      <button class="tab active" data-status="all" onclick="ArtistStudio.setStatus('all')">
-        Semua
-      </button>
-      <button class="tab" data-status="published" onclick="ArtistStudio.setStatus('published')">
-        Published
-      </button>
-      <button class="tab" data-status="draft" onclick="ArtistStudio.setStatus('draft')">
-        Draft
-      </button>
-      <button class="tab" data-status="scheduled" onclick="ArtistStudio.setStatus('scheduled')">
-        Terjadwal
-      </button>
-    </nav>
-
-    <!-- SEARCH -->
-    <div class="announcement-search">
-      <input
-        id="studioSearchInput"
-        placeholder="Cari pengumuman..."
-        oninput="ArtistStudio.renderList()"
-      />
-    </div>
-
-    <!-- STATS -->
-    <div class="announcement-stats">
-      <div class="stat">
-        <span class="stat-label">Total</span>
-        <span class="stat-value" id="statTotal">0</span>
-      </div>
-      <div class="stat">
-        <span class="stat-label">Published</span>
-        <span class="stat-value" id="statPublished">0</span>
-      </div>
-      <div class="stat">
-        <span class="stat-label">Draft</span>
-        <span class="stat-value" id="statDraft">0</span>
-      </div>
-    </div>
-
-    <!-- LIST -->
-    <div class="announcement-list" id="studioList">
-      <!-- announcement cards rendered by JS -->
-    </div>
-
-  </section>
-
-  <!-- HIDDEN CONTEXT (SYSTEM) -->
-  <input type="hidden" id="studioArtistSelect" value="Fourtwnty" />
-
-</section>
         </div>
     </main>
 
@@ -359,10 +269,279 @@
             </div>
         </div>
         </div>
-               
-
     </main>
+
+    <section class="studio-page" id="studioView">
+
+  <!-- =========================
+       STUDIO HEADER
+  ========================== -->
+  <header class="studio-header">
+    <span class="studio-badge">
+      <i class="fa-solid fa-circle-check"></i>
+      Verified Artist
+    </span>
+
+    <h1 class="studio-artist-name">Fourtwnty</h1>
+    <p class="studio-subtitle">Artist Studio</p>
+  </header>
+
+  <!-- =========================
+       STUDIO NAVIGATION
+  ========================== -->
+  <nav class="studio-nav">
+    <ul>
+      <li class="active">Overview</li>
+      <li>Pengumuman</li>
+      <li>Analytics</li>
+      <li>Konten</li>
+    </ul>
+  </nav>
+
+  <!-- =========================
+       STUDIO WORKSPACE
+  ========================== -->
+  <div class="studio-workspace">
+
+    <!-- ===== LEFT CONTENT ===== -->
+    <main>
+
+      <!-- OVERVIEW PANEL -->
+      <section class="studio-panel">
+        <h2>Studio Overview</h2>
+
+        <div class="studio-overview-grid">
+          <div class="overview-card">
+            <h3>Followers</h3>
+            <div class="overview-value">10.517.222</div>
+          </div>
+
+          <div class="overview-card">
+            <h3>Total Pengumuman</h3>
+            <div class="overview-value">12</div>
+          </div>
+
+          <div class="overview-card">
+            <h3>Published</h3>
+            <div class="overview-value">8</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ANNOUNCEMENT MODULE -->
+      <section class="studio-panel announcement-module">
+
+        <div class="panel-header">
+        <div class="panel-title">
+            <h2>Pengumuman Artis</h2>
+            <span class="panel-subtitle">
+            Komunikasi resmi satu arah kepada followers
+            </span>
+        </div>
+
+        <button class="btn-login" onclick="AnnouncementModal.open()">
+            <i class="fa-solid fa-plus"></i>
+            Buat Pengumuman
+        </button>
+        </div>
+
+
+        <!-- FILTER -->
+        <div class="announcement-filters">
+        <button class="filter-btn active" data-filter="all">Semua</button>
+        <button class="filter-btn" data-filter="published">Published</button>
+        <button class="filter-btn" data-filter="pending">Pending Review</button>
+        <button class="filter-btn" data-filter="draft">Draft</button>
+        </div>
+
+
+        <!-- LIST -->
+        <div class="announcement-list"></div>
+
+<!-- =========================
+       STUDIO FOOTER
+  ========================== -->
+  <footer class="studio-footer">
+    <i class="fa-solid fa-circle-info"></i>
+    Pengumuman bersifat satu arah dan tidak mendukung komentar atau balasan.
+    Fitur ini bukan media sosial dan hanya digunakan untuk komunikasi resmi artis.
+  </footer>
+
+      </section>
+    </main>
+
+    <!-- ===== RIGHT SIDEBAR ===== -->
+    <aside class="studio-sidebar">
+
+      <!-- =========================
+     ARTIST WORKS / CATALOG
+========================== -->
+<section class="song-list-section">
+
+  <div class="section-header" style="padding:0;">
+    <h3 class="section-title">Karya Artis</h3>
+    <a href="#" class="show-all">Lihat semua</a>
+  </div>
+
+  <div class="song-list">
+
+    <div class="song-item">
+      <div class="song-index">1</div>
+
+      <div class="song-info">
+        <div class="song-cover">
+          <i class="fa-solid fa-music"></i>
+        </div>
+
+        <div class="song-meta">
+          <span class="song-title">Mangu</span>
+          <span class="song-artist">Single • 2024</span>
+        </div>
+      </div>
+
+      <div class="song-duration">4:21</div>
+    </div>
+
+    <div class="song-item">
+      <div class="song-index">2</div>
+
+      <div class="song-info">
+        <div class="song-cover">
+          <i class="fa-solid fa-music"></i>
+        </div>
+
+        <div class="song-meta">
+          <span class="song-title">Zona Nyaman</span>
+          <span class="song-artist">Single • 2023</span>
+        </div>
+      </div>
+
+      <div class="song-duration">3:45</div>
+    </div>
+
+    <div class="song-item">
+      <div class="song-index">3</div>
+
+      <div class="song-info">
+        <div class="song-cover">
+          <i class="fa-solid fa-music"></i>
+        </div>
+
+        <div class="song-meta">
+          <span class="song-title">Aku Tenang</span>
+          <span class="song-artist">Album • Ego & Fungsi Otak</span>
+        </div>
+      </div>
+
+      <div class="song-duration">4:02</div>
+    </div>
+
+    <div class="song-item">
+      <div class="song-index">4</div>
+
+      <div class="song-info">
+        <div class="song-cover">
+          <i class="fa-solid fa-music"></i>
+        </div>
+
+        <div class="song-meta">
+          <span class="song-title">Fana Merah Jambu</span>
+          <span class="song-artist">Album • Lelaku</span>
+        </div>
+      </div>
+
+      <div class="song-duration">4:56</div>
+    </div>
+
+  </div>
+</section>
+    </aside>
+  </div>
+</section>
+<!-- MODAL -->
+<!-- ANNOUNCEMENT COMPOSER MODAL -->
+<div class="announcement-modal hidden" id="announcementModal">
+  <div class="modal-content">
+
+    <!-- HEADER -->
+    <header class="modal-header">
+      <h3>Pengumuman Baru</h3>
+      <p class="modal-subtitle">
+        Pengumuman resmi ini akan ditampilkan kepada followers artis di Spotify.
+      </p>
+    </header>
+
+    <!-- BODY -->
+    <div class="modal-body">
+
+      <!-- CONTENT -->
+      <div class="form-group">
+        <label for="announcementInput">Isi Pengumuman</label>
+        <textarea
+          id="announcementInput"
+          maxlength="500"
+          placeholder="Contoh: Album terbaru kami akan dirilis pada 12 Oktober 2025."
+        ></textarea>
+
+        <div class="form-meta">
+          <span class="char-counter" id="charCounter">0 / 500</span>
+        </div>
+      </div>
+
+      <!-- VISIBILITY WINDOW -->
+      <div class="form-group">
+        <label>Waktu Tayang</label>
+
+        <div class="schedule-grid">
+          <div class="schedule-field">
+            <span class="schedule-label">Tayang mulai</span>
+            <input type="date" id="startDate" />
+          </div>
+
+          <div class="schedule-field">
+            <span class="schedule-label">Berakhir pada</span>
+            <input type="date" id="endDate" />
+          </div>
+        </div>
+
+        <span class="schedule-hint">
+          Pengumuman akan otomatis disembunyikan setelah tanggal berakhir.
+        </span>
+      </div>
+
+      <!-- DELIVERY MODE -->
+      <div class="form-group inline">
+        <label>Status Pengiriman</label>
+        <select id="announcementMode">
+          <option value="publish">Kirim sekarang</option>
+          <option value="schedule">Jadwalkan</option>
+          <option value="draft">Simpan sebagai draft</option>
+        </select>
+      </div>
+
+      <!-- SYSTEM INFO -->
+      <div class="system-hint">
+        <i class="fa-solid fa-shield-halved"></i>
+        Semua pengumuman akan melalui moderasi otomatis sebelum dipublikasikan.
+      </div>
+
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="modal-actions">
+      <button class="btn-text" onclick="AnnouncementModal.close()">
+        Batal
+      </button>
+      <button class="btn-login" onclick="AnnouncementModal.submit()">
+        Simpan Pengumuman
+      </button>
+    </footer>
+
+  </div>
 </div>
+
+
+
 
 <!-- Context Menu -->
 <div class="context-menu" id="contextMenu">
@@ -440,9 +619,8 @@
 
     <!-- Script dipisah -->
     <script src="assets/js/app.js"></script>
-    <script src="assets/js/studio.js"></script>
-    <script src="assets/js/announcement.js"></script>
-    <script src="assets/js/storage.js"></script>
+    <script src="assets/js/artistStudio.js"></script>
+    <script src="assets/js/announcementModal.js"></script>
      <script src="assets/js/announcement-data.js"></script>
     <script src="assets/js/navigation.js"></script>
     <script src="assets/js/modal.js"></script>
