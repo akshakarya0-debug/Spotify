@@ -449,7 +449,7 @@
 
         /* Announcement Modal */
         .modal-overlay {
-            display: none;
+            display: flex;
             position: fixed;
             top: 0;
             left: 0;
@@ -460,6 +460,10 @@
             align-items: center;
             justify-content: center;
             animation: fadeIn 0.3s ease-out;
+        }
+
+        .modal-overlay.hidden {
+            display: none;
         }
 
         .modal-overlay.active {
@@ -600,7 +604,8 @@
         color: #1db954;
         }
 
-        .status.scheduled {
+        .status.scheduled,
+        .status.pending {
         background: rgba(255, 205, 60, 0.15);
         color: #ffcd3c;
         }
@@ -717,6 +722,63 @@
             border-radius: 50%;
             animation: pulse-notification 2s infinite;
         }
+
+        /* Health indicator in top nav */
+        .health-indicator {
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          margin-left: 12px;
+          color: var(--spotify-light-gray);
+          font-size: 13px;
+          cursor: default;
+        }
+
+        .health-indicator .health-dot {
+          width: 10px;
+          height: 10px;
+          border-radius: 50%;
+          background: gray;
+          display: inline-block;
+          box-shadow: 0 0 6px rgba(0,0,0,0.4);
+        }
+
+        .health-indicator .health-text {
+          font-size: 12px;
+          color: var(--spotify-light-gray);
+          white-space: nowrap;
+        }
+
+        /* Feature Flags UI */
+        .flags-button {
+          background: transparent;
+          border: 1px solid rgba(255,255,255,0.08);
+          color: var(--spotify-white);
+          padding: 6px 10px;
+          border-radius: 6px;
+          cursor: pointer;
+          font-size: 13px;
+        }
+
+        .flags-panel {
+          position: absolute;
+          top: 56px;
+          right: 16px;
+          background: rgba(0,0,0,0.85);
+          border: 1px solid rgba(255,255,255,0.06);
+          padding: 12px;
+          border-radius: 8px;
+          min-width: 200px;
+          z-index: 1200;
+          box-shadow: 0 6px 24px rgba(0,0,0,0.6);
+        }
+
+        .flags-panel.hidden { display: none; }
+
+        .flags-panel-title { font-weight:700; margin-bottom:8px; }
+        .flags-row { display:flex; align-items:center; gap:8px; margin:6px 0; }
+        .flags-label { color:var(--spotify-light-gray); font-size:13px; }
+        .flags-hint { margin-top:8px; font-size:12px; color:var(--spotify-light-gray); }
 
         @keyframes pulse-notification {
             0%, 100% { transform: scale(1); opacity: 1; }

@@ -197,7 +197,8 @@
                     <span>Ikuti</span>
                 </button>
 
-                <button class="btn-announcement" onclick="openAnnouncementModal()">
+                <!-- Button pengumuman untuk semua artist -->
+                <button class="btn-announcement" id="announcementBtn" onclick="openAnnouncementViewerModal()">
                     <i class="fa-solid fa-bullhorn"></i>
                     Pengumuman
                     <span class="notification-badge"></span>
@@ -459,8 +460,8 @@
   </div>
 </section>
 <!-- MODAL -->
-<!-- ANNOUNCEMENT COMPOSER MODAL -->
-<div class="announcement-modal hidden" id="announcementModal">
+<!-- ANNOUNCEMENT COMPOSER MODAL - Untuk artis membuat pengumuman di Studio -->
+<div class="announcement-modal hidden" id="announcementComposerModal">
   <div class="modal-content">
 
     <!-- HEADER -->
@@ -565,8 +566,8 @@
     </div>
 </div>
 
-<!-- Announcement Modal -->
-<div class="modal-overlay" id="announcementModal">
+<!-- Announcement Viewer Modal - Untuk followers membaca pengumuman artis -->
+<div class="modal-overlay hidden" id="announcementViewerModal">
     <div class="modal">
         <!-- Header -->
         <div class="modal-header">
@@ -574,7 +575,7 @@
                 <i class="fa-solid fa-bullhorn"></i>
                 Pengumuman Artis
             </h2>
-            <button class="modal-close" onclick="closeAnnouncementModal()">
+            <button class="modal-close" onclick="closeAnnouncementViewerModal()">
                 <i class="fa-solid fa-xmark"></i>
             </button>
         </div>
@@ -617,13 +618,32 @@
 
 
 
-    <!-- Script dipisah -->
+    <!-- Script dipisah - URUTAN PENTING! -->
+    <!-- 1. App.js - State management (diperlukan semua modul) -->
     <script src="assets/js/app.js"></script>
-    <script src="assets/js/artistStudio.js"></script>
-    <script src="assets/js/announcementModal.js"></script>
-     <script src="assets/js/announcement-data.js"></script>
-    <script src="assets/js/navigation.js"></script>
+    
+    <!-- Adapters: cache, moderation, telemetry, health (required before studio/modal) -->
+    <script src="assets/js/adapters/cacheAdapter.js"></script>
+    <script src="assets/js/adapters/moderationService.js"></script>
+    <script src="assets/js/adapters/telemetry.js"></script>
+    <script src="assets/js/adapters/health.js"></script>
+
+    <!-- 2. modal.js - HARUS SEBELUM artistStudio (artistStudio butuh getUnreadCountForArtist) -->
     <script src="assets/js/modal.js"></script>
+    
+    <!-- 3. artistStudio.js - Depends on modal.js functions -->
+    <script src="assets/js/artistStudio.js"></script>
+    
+    <!-- 4. announcementModal.js - Composer modal -->
+    <script src="assets/js/announcementModal.js"></script>
+    
+    <!-- 5. Data & utilities -->
+    <script src="assets/js/announcement-data.js"></script>
+    <script src="assets/js/navigation.js"></script>
+    <!-- Health UI (polls Health.check and shows status) -->
+    <script src="assets/js/health-ui.js"></script>
+    
+    <!-- 6. Context menu -->
     <script src="assets/js/context-menu.js"></script>
 
 </body>

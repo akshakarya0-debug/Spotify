@@ -46,6 +46,29 @@ function openArtistStudio() {
     hideAll();
     artistPage().classList.add("active");
     document.getElementById("artistName").textContent = name;
+    
+    // Set listener count berdasarkan artis
+    const listeners = {
+      'Fourtwnty': '10.517.222 pendengar bulanan',
+      'Nadhif Basalamah': '8.342.891 pendengar bulanan',
+    };
+    
+    const listenerCount = listeners[name] || '5.234.567 pendengar bulanan';
+    document.getElementById("artistListeners").textContent = listenerCount;
+    
+    // ===== ANNOUNCEMENT SYSTEM =====
+    // Set current artist di ArtistStudio (untuk tracking)
+    ArtistStudio.setCurrentArtist(name);
+    
+    // Tampilkan button pengumuman untuk SEMUA artist
+    const announcementBtn = document.getElementById("announcementBtn");
+    if (announcementBtn) {
+      announcementBtn.style.display = "inline-flex"; // Tampilkan untuk semua
+    }
+    
+    // Update notification badge (hanya muncul untuk Fourtwnty)
+    ArtistStudio.updateNotificationBadge();
+    
     view = "artist";
   }
 
